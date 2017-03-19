@@ -1,7 +1,7 @@
 # genetic_algorithm
 Genetic algorithm
 
-1. Implement population 
+1. Initiate population 
 2. Calculate fitness of each individual
 3. If all individuals do not have equal fitness CONTINUE
 4. Basing on their fitness the probability of selection is calculated
