@@ -1,42 +1,20 @@
-function [index_a, index_b] = select_individuals(array)
+function [selectedIndividuals] = select_individuals(sorted_fit)
     
-    
-    index_a = 0;
-    index_b = 0;
-    
-    while index_a == index_b            %indices cannot be the same
-        
-        rand_a = rand();
-        rand_b = rand();
-        
-        if rand_a >= array(6, 1)
-            index_a = array(6, 3);
-        elseif rand_a >= array(5, 1)
-            index_a = array(5, 3);
-        elseif rand_a >= array(4, 1)
-            index_a = array(4, 3);
-        elseif rand_a >= array(3, 1)
-            index_a = array(3, 3);
-        elseif rand_a >= array(2, 1)
-            index_a = array(2, 3);
-        elseif rand_a >= array(1, 1)
-            index_a = array(1, 3); 
-        end
+    probability = sorted_fit/sum(sorted_fit);
 
-        if rand_b >= array(6, 1)
-            index_b = array(6, 3);
-        elseif rand_b >= array(5, 1)
-            index_b = array(5, 3);
-        elseif rand_b >= array(4, 1)
-            index_b = array(4, 3);
-        elseif rand_b >= array(3, 1)
-            index_b = array(3, 3);
-        elseif rand_b >= array(2, 1)
-            index_b = array(2, 3);
-        elseif rand_b >= array(1, 1)
-            index_b = array(1, 3);  
-        end
+    for j = 1:length(probability)
+        matingVector(j,1) = sum(probability(1:j));
+    end
+
+    for j = 1:length(probability)
+        matingSelector = rand;
         
+        for i = 1:length(probability)
+            if matingSelector < matingVector(i,1)
+                selectedIndividuals(j) = i;
+                break
+            end
+        end
     end
 
 end
