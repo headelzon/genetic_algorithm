@@ -64,26 +64,37 @@ def select(ff):
     return selected  # returns indices of selected individuals
 
 
-def mate(population, selected):
-    cross_point = random.randint(2, len(population[0]))
+def mate(population, selected, crossover_prob):
+
+    global crossover_count
 
     i = len(population) - 1
 
     new_x = []
 
     while i - 1 > -1:
-        cross_part_1, cross_part_2 = [], []
 
-        cross_part_1.extend(population[selected[i]][:cross_point])
-        cross_part_1.extend(population[selected[i - 1]][cross_point:])
+        if random.uniform(0, 1) > crossover_prob:
+            new_x.append(population[selected[i]])
+            new_x.append(population[selected[i-1]])
+            i -= 2
+            continue
+        else:
+            cross_point = random.randint(2, len(population[0]))
 
-        cross_part_2.extend(population[selected[i - 1]][:cross_point])
-        cross_part_2.extend(population[selected[i]][cross_point:])
+            cross_part_1, cross_part_2 = [], []
 
-        new_x.append(cross_part_1)
-        new_x.append(cross_part_2)
+            cross_part_1.extend(population[selected[i]][:cross_point])
+            cross_part_1.extend(population[selected[i - 1]][cross_point:])
 
-        i -= 2
+            cross_part_2.extend(population[selected[i - 1]][:cross_point])
+            cross_part_2.extend(population[selected[i]][cross_point:])
+
+            new_x.append(cross_part_1)
+            new_x.append(cross_part_2)
+
+            crossover_count += 1
+            i -= 2
 
     return new_x
 

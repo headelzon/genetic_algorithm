@@ -27,6 +27,7 @@ ff_max_init = genetic.ff_max(ff_init)
 # main algorithm
 iterations = 1
 mutation_count = 0
+genetic.crossover_count = 0
 
 ff = ff_init  # ff used in the loop set to ff_init
 
@@ -41,7 +42,7 @@ while genetic.ff_av(ff) != 10:
 
     selected = genetic.select(ff)
 
-    x = genetic.mate(x, selected)
+    x = genetic.mate(x, selected, crossover_prob)
 
     ff = genetic.ff(x)
 
@@ -56,8 +57,8 @@ while genetic.ff_av(ff) != 10:
     ff_min_points.append(genetic.ff_min(ff))
     iteration_points.append(iterations)
 
+max_crossover = population/2 * iterations
 
-# TODO plots
 pyplot.figure(1)
 pyplot.plot(iteration_points, ff_av_points)
 pyplot.xlabel('Iterations')
@@ -78,4 +79,4 @@ print(iterations)
 # print('Initial ff: {};\tFinal ff: {}'.format(ff_init, ff))
 print('Initial average: {};\tFinal average: {}'.format(ff_av_init, genetic.ff_av(ff)))
 print('No of mutations: {}'.format(mutation_count))
-
+print('No of crossovers: {} ({}% rate)'.format(genetic.crossover_count, (genetic.crossover_count/max_crossover)*100))
