@@ -4,8 +4,13 @@ import random
 
 def ff(array):
     fitness = []
-    for x in range(len(array)):
-        t = ((sum(array[x])), x)  # values in fitness matrix are tuples (to store indices)
+    for i in range(len(array)):
+        B = []
+        for j in array[i]:
+            B.append(str(j))
+        B = ''.join(B)
+        B = int(B, 2)
+        t = (round(numpy.interp(B, [0, 1023], [0, 1]), 2), i)
         fitness.append(t)
 
     return fitness
@@ -39,7 +44,6 @@ def ff_min(ff_array):
     temp = []
     for x in range(len(ff_array)):
         temp.append(ff_array[x][0])
-
     return min(temp)
 
 
