@@ -32,7 +32,7 @@ genetic.crossover_count = 0
 ff = ff_init  # ff used in the loop set to ff_init
 ff_av = ff_av_init
 
-ff_av_points, ff_max_points, ff_min_points, iteration_points = [], [], [], []
+ff_av_points, ff_max_points, ff_total_points, iteration_points = [], [], [], []
 
 # MAIN LOOP
 while ff_av < 1:          # repeat until all individuals have fitness = 10
@@ -55,6 +55,7 @@ while ff_av < 1:          # repeat until all individuals have fitness = 10
     iterations += 1
     ff_av_points.append(ff_av)
     ff_max_points.append(ff_max)
+    ff_total_points.append(genetic.ff_total(ff))
 
     iteration_points.append(iterations)
 
@@ -75,6 +76,13 @@ pyplot.grid(True)
 pyplot.show()
 
 pyplot.figure(2)
+pyplot.plot(iteration_points, ff_total_points, 'r')
+pyplot.xlabel('Iterations')
+pyplot.ylabel('Total fitness')
+pyplot.grid(True)
+pyplot.show()
+
+pyplot.figure(3)
 pyplot.plot(iteration_points, ff_max_points, 'r')
 pyplot.xlabel('Iterations')
 pyplot.ylabel('Maximum fitness')
