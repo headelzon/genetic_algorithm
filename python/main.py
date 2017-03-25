@@ -2,22 +2,18 @@
 # W. F. Koziak
 
 import random
-import warnings
 import genetic
 from matplotlib import pyplot
 
 
 n_elem = 10
-population = 100
+population_init = 100
 
 mutation_prob = 0.02
 crossover_prob = 0.85
 
-if population % 2 != 0:
-    warnings.warn('Population size should be even for algorithm to work properly!')
-
 # INITIALIZATION
-x = [[random.randint(0, 1) for i in range(n_elem)] for b in range(population)]
+x = [[random.randint(0, 1) for i in range(n_elem)] for b in range(population_init)]
 
 # EVALUATION
 ff_init = genetic.ff(x)  # initial evaluation (distinguished for comparison later on)
@@ -59,7 +55,7 @@ while ff_av < 1:          # repeat until all individuals have fitness = 10
 
     iteration_points.append(iterations)
 
-max_crossover = population/2 * iterations
+max_crossover = population_init/2 * iterations
 
 # OUTPUT
 print('Iterations: {}'.format(iterations))

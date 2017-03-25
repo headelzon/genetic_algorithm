@@ -10,7 +10,7 @@ def ff(array):
             B.append(str(j))
         B = ''.join(B)
         B = int(B, 2)
-        t = (round(numpy.interp(B, [0, 1023], [0, 1]), 2), i)
+        t = (round(numpy.interp(B, [0, 1023], [0, 1]), 2), i)   # TODO use enumerate()
         fitness.append(t)
 
     return fitness
@@ -120,3 +120,16 @@ def mutate(population, mutation_prob):
 
     else:
         return False
+
+
+def save_elite(population, new_population):
+    ff_now = ff(population)
+    ff_new = ff(new_population)
+
+    worst = min(ff_new, key=lambda tup: tup[0])
+    best = max(ff_now, key=lambda tup: tup[0])
+
+    new_population[worst[1]] = population[best[1]]
+
+    print('Worst: {}'.format(worst))
+    print('Best: {}'.format(best))
