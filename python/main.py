@@ -36,8 +36,9 @@ while ff_av < 1:          # repeat until all individuals have fitness = 10
     ff.sort(key=lambda tup: tup[0])     # sort ff by first digit in each tuple
 
     selected = genetic.select(ff)
-
-    x = genetic.mate(x, selected, crossover_prob)
+    new_x = genetic.mate(x, selected, crossover_prob)
+    genetic.save_elite(x, new_x)
+    x = new_x
 
     mutated = genetic.mutate(x, mutation_prob)
 
