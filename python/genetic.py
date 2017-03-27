@@ -72,8 +72,6 @@ def mate(population, selected, crossover_prob):
 
     global crossover_count
 
-    ...
-
     i = len(population) - 1
 
     new_x = []

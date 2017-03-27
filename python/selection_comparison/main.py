@@ -35,7 +35,7 @@ while ff_av < 1:  # repeat until all individuals have fitness = 1
 
     ff.sort(key=lambda tup: tup[0])  # sort ff by first digit in each tuple
 
-    selected = selections.select_basic(ff)
+    selected = selections.select_rank(ff)
 
     new_x = genetic.mate(x, selected, crossover_prob)
     genetic.save_elite(x, new_x)
@@ -67,14 +67,6 @@ print('No of crossovers: {} ({}% rate)'.format(genetic.crossover_count,
 # GRAPHS
 pyplot.figure(1)
 pyplot.plot(iteration_points, ff_av_points)
-pyplot.xlabel('Iterations')
-pyplot.ylabel('Average fitness')
-pyplot.grid(True)
-pyplot.show()
-
-pyplot.figure(2)
 pyplot.plot(iteration_points, ff_max_points, 'r')
-pyplot.xlabel('Iterations')
-pyplot.ylabel('Maximum fitness')
 pyplot.grid(True)
 pyplot.show()
