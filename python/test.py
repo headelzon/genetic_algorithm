@@ -1,39 +1,38 @@
 import random
-import warnings
 import genetic
+import math
 
 
-n_elem = 10
-population = 6
-
-if population % 2 != 0:
-    warnings.warn('Population size should be even for algorithm to work properly!')
-
-# Population initialization
-x = [[random.randint(0, 1) for i in range(n_elem)] for b in range(population)]
-
-# Population evaluation
-ff_init = genetic.ff(x)        # initial evaluation (distinguished for comparison later on)
-ff_av_init = genetic.ff_av(ff_init)
-ff_total_init = genetic.ff_total(ff_init)
-ff_max_init = genetic.ff_max(ff_init)
-
-# main algorithm
-iterations = 0
-ff = ff_init                    # ff used in the loop set to ff_init
-
-print('Initial ff: {}'.format(ff))
-
-ff.sort(key=lambda tup: tup[0]) # sort ff by first digit in each tuple
-print('Sorted ff: {}'.format(ff))
-
-selected = genetic.select(ff)
-print('Selected indices: {}'.format(selected))
-
-x = genetic.mate(x, selected)
-print('New population: {}'.format(x))
+x = [[random.randint(0, 1) for i in range(10)] for b in range(30)]
 
 ff = genetic.ff(x)
-print('New ff: {}'.format(ff))
 
+fit, ind = [], []
 
+for j in range(len(ff)):
+    fit.append(ff[j][0])
+
+for j in range(len(ff)):
+    ind.append(ff[j][1])
+
+probability = []
+
+for j in range(len(fit)):
+    probability.append(fit[j] / sum(fit))
+
+selected, rests = [], []
+for i in range(len(fit)):
+    n = math.floor(len(fit) * probability[i])
+    l = [ind[i]] * n
+    t = (len(fit)*probability[i]-n, i)
+    rests.append(t)
+    selected.extend(l)
+
+empty = len(fit) - len(selected)
+rests.sort(reverse=True, key=lambda tup: tup[0])
+
+b = rests[:empty]
+for i in range(empty):
+    selected.append(b[i][1])
+
+print(selected)

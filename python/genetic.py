@@ -72,6 +72,8 @@ def mate(population, selected, crossover_prob):
 
     global crossover_count
 
+    ...
+
     i = len(population) - 1
 
     new_x = []
@@ -120,3 +122,13 @@ def mutate(population, mutation_prob):
 
     else:
         return False
+
+
+def save_elite(population, new_population):
+    ff_now = ff(population)
+    ff_new = ff(new_population)
+
+    worst = min(ff_new, key=lambda tup: tup[0])
+    best = max(ff_now, key=lambda tup: tup[0])
+
+    new_population[worst[1]] = population[best[1]]
