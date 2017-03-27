@@ -7,7 +7,7 @@ from matplotlib import pyplot
 
 
 n_elem = 10
-population_init = 100
+population_init = 30
 
 mutation_prob = 0.02
 crossover_prob = 0.85
@@ -73,13 +73,6 @@ pyplot.grid(True)
 pyplot.show()
 
 pyplot.figure(2)
-pyplot.plot(iteration_points, ff_total_points, 'r')
-pyplot.xlabel('Iterations')
-pyplot.ylabel('Total fitness')
-pyplot.grid(True)
-pyplot.show()
-
-pyplot.figure(3)
 pyplot.plot(iteration_points, ff_max_points, 'r')
 pyplot.xlabel('Iterations')
 pyplot.ylabel('Maximum fitness')

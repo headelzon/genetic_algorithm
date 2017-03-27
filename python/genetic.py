@@ -10,7 +10,7 @@ def ff(array):
             B.append(str(j))
         B = ''.join(B)
         B = int(B, 2)
-        t = (round(numpy.interp(B, [0, 1023], [0, 1]), 2), i)   # TODO use enumerate()
+        t = (round(numpy.interp(B, [0, 1023], [0, 1]), 2), i)
         fitness.append(t)
 
     return fitness
@@ -72,6 +72,8 @@ def mate(population, selected, crossover_prob):
 
     global crossover_count
 
+    ...
+
     i = len(population) - 1
 
     new_x = []
@@ -130,6 +132,3 @@ def save_elite(population, new_population):
     best = max(ff_now, key=lambda tup: tup[0])
 
     new_population[worst[1]] = population[best[1]]
-
-    print('Worst: {}'.format(worst))
-    print('Best: {}'.format(best))
