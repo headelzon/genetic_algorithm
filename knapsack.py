@@ -18,11 +18,17 @@ print(data)
 x = [[random.randint(0, 1) for i in range(elements)] for b in range(population)]
 
 # TODO FITNESS FUNCTION
+# for each 1 in chromosome add its benefit and weight to total benefit and total weight
 
-# TODO SELECTION
+# SELECTION
+# genetic.select()
+# TODO group selection
 
-# TODO CROSS-OVER
+# CROSS-OVER
+# from genetic.mate()
 
 # MUTATION
+# from genetic.mutate()
 
 # STOPPING CONDITION
+# until 90% of chromosomes are identical
