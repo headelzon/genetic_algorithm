@@ -57,12 +57,13 @@ while ff_av < 1:          # repeat until all individuals have fitness = 10
     iteration_points.append(iterations)
 
 max_crossover = population_init/2 * iterations
+crossover_rate = round((genetic.crossover_count/max_crossover)*100, 2)
 
 # OUTPUT
 print('Iterations: {}'.format(iterations))
 print('Initial average: {};\tFinal average: {}'.format(round(ff_av_init, 2), genetic.ff_av(ff)))
 print('No of mutations: {} ({}% rate)'.format(mutation_count, round((mutation_count/iterations)*100, 2)))
-print('No of crossovers: {} ({}% rate)'.format(genetic.crossover_count, round((genetic.crossover_count/max_crossover)*100, 2)))
+print('No of crossovers: {} ({}% rate)'.format(genetic.crossover_count, crossover_rate))
 
 # GRAPHS
 pyplot.figure(1)

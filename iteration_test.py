@@ -7,7 +7,6 @@ import selections
 import numpy
 from tqdm import tqdm
 
-
 n_elem = 10
 population_init = 30
 
@@ -25,7 +24,7 @@ for w in range(1, 6):
         method = 'rest with repeating'
     elif w == 4:
         method = 'rest without repeating'
-    elif w == 5:
+    else:
         method = 'rank tournament'
 
     print('Selection method: ' + method)
@@ -59,14 +58,13 @@ for w in range(1, 6):
             if w == 1:
                 selected = selections.select_roulette(ff)
             elif w == 2:
-                method = selections.select_basic(ff)
+                selected = selections.select_basic(ff)
             elif w == 3:
-                method = selections.select_rest_rep(ff)
+                selected = selections.select_rest_rep(ff)
             elif w == 4:
-                method = selections.select_rest_norep(ff)
-            elif w == 5:
-                method = selections.select_rank(ff)
-
+                selected = selections.select_rest_norep(ff)
+            else:
+                selected = selections.select_rank(ff)
 
             new_x = genetic.mate(x, selected, crossover_prob)
             genetic.save_elite(x, new_x)
