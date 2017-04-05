@@ -1,61 +1,39 @@
 import random
-import genetic
+import itertools
+import knapsack_genetic as gen
 import math
 
-n_elem = 10
-population_init = 30
 
-# INITIALIZATION
-x = [[random.randint(0, 1) for i in range(n_elem)] for b in range(population_init)]
-ff = genetic.ff(x)
+elements = 10
+population = 10
+data = []   # matrix containing info about elements (their wights and benefits)
 
-fit, ind = [], []
+weights, benefits = [], []
+weight_limit = math.ceil((0.5 * (10*elements)) - (0.125 * (10*elements)))
 
-for j in range(len(ff)):
-    fit.append(ff[j][0])
+for i in range(elements):
+    weights.append(random.randint(1, 10))
+    benefits.append(random.randint(1, 10))
 
-for j in range(len(ff)):
-    ind.append(ff[j][1])
+data.append(weights)
+data.append(benefits)
 
-probability = []
+bin = [0, 1]
+possible = list(itertools.product(range(2), repeat=elements))
 
-for j in range(len(fit)):
-    probability.append(fit[j] / sum(fit))
+ff_init = gen.ff_short(data, possible)
 
-selected, rests = [], []
-for i in range(len(fit)):
-    n = math.floor(len(fit) * probability[i])
-    l = [ind[i]] * n
-    selected.extend(l)
-    t = (len(fit) * probability[i] - n, i)
-    rests.append(t)
+below_limit = []
 
-print(selected)
-
-empty = len(fit) - len(selected)
-
-fit, ind, probability, l = [], [], [], []
-
-for j in range(len(rests)):
-    fit.append(rests[j][0])
-
-for j in range(len(rests)):
-    ind.append(rests[j][1])
-
-for j in range(len(fit)):
-    probability.append(fit[j] / sum(fit))
-
-for i in range(empty):
-    p = random.choices(ind, probability)
-    p = p[0]
-    if p in l:
-        while p in l:
-            p = random.choices(ind, probability)
-            p = p[0]
-        l.append(p)
+for i in range(len(possible)):
+    if ff_init[i][0] <= weight_limit:
+        below_limit.append(possible[i])
     else:
-        l.append(p)
+        pass
 
-selected.extend(l)
+ff = gen.ff_short(data, below_limit)
 
-print(selected)
+ff.sort(key=lambda x: x[1], reverse=True)
+
+print('Maximum possible fitness: {}'.format(ff[0][1]))
+
