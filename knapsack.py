@@ -10,7 +10,7 @@ import math
 elements = 10
 population = 50
 data = []   # matrix containing info about elements (their wights and benefits)
-weight_limit = math.ceil((0.5 * (10*elements)) - (0.125 * (10*elements)))
+weight_limit = math.ceil((0.5 * (10*elements)) - (0.3 * (10*elements)))
 mutation_prob = 0.02
 crossover_prob = 0.75
 
@@ -28,9 +28,12 @@ data.append(benefits)
 
 max_possible = gen.test(data, elements, weight_limit)
 
-# data = [[weights], [benefits]]
+print('Weights: {}'.format(data[0]))
+print('Values: {}'.format(data[1]))
+print('Obtained result: {}'.format(max_possible))
 
-x = [[random.randint(0, 1) for i in range(elements)] for b in range(population)]
+# data = [[weights], [benefits]]
+x = [[random.randint(0, 1) for a in range(elements)] for b in range(population)]
 
 # FITNESS FUNCTION
 ff_init = gen.ff(data, x, weight_limit)
@@ -40,12 +43,13 @@ ff = ff_init
 
 while gen.ff_av(ff) < max_possible:
     # SELECTION
-    selected = gen.select_roulette(ff)
-    # TODO group selection
+    selected = gen.select_rest_rep(ff)
 
     # CROSS-OVER
     new_x = gen.mate(x, selected, crossover_prob)
+
     gen.save_elite(x, new_x, data, weight_limit)
+
     x = new_x
 
     # MUTATION
@@ -61,11 +65,15 @@ while gen.ff_av(ff) < max_possible:
     ff_av_points.append(ff_av/max_possible)
     iteration_points.append(iteration_count)
 
-ff_av = (gen.ff_av(ff))/(max_possible)
+ff_av = (gen.ff_av(ff))/max_possible
 
-print('Final average fitness: {}\tMaximum possible: {}'.format(ff_av, max_possible))
+print('Final average fitness: {}'.format(ff_av))
 print('Mutations: {}'.format(mutation_count))
 print('Iterations: {}'.format(iteration_count))
+
+print('Weights: {}'.format(data[0]))
+print('Values: {}'.format(data[1]))
+print('Obtained result: {}'.format(x[0]))
 
 # GRAPHS
 pyplot.figure(1)

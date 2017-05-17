@@ -1,19 +1,23 @@
 import numpy
 import random
 import itertools
+import math
 
 
 def ff(data, population, limit):
     fitness = []
+    seq = []
+    for a in range(len(population[0])):
+        seq.append(a)
+
     for i in range(len(population)):
-        seq = [0, 1, 2, 3]
         while True:
             total_weight, total_benefit = 0, 0
             for j in range(len(population[0])):
                 total_weight += population[i][j] * data[0][j]
                 total_benefit += population[i][j] * data[1][j]
 
-            if total_weight > limit:
+            if total_weight >= limit:
                 while len(seq) > 0:
                     choice = random.choice(seq)
                     seq.remove(choice)
@@ -22,6 +26,7 @@ def ff(data, population, limit):
                         break
                     else:
                         pass
+
             else:
                 break
 
@@ -37,14 +42,14 @@ def ff_av(ff_array):
     return numpy.mean(temp)
 
 
-def select_roulette(ff):
+def select_roulette(fitt):
     fit, ind = [], []  # will store only indices
 
-    for j in range(len(ff)):
-        fit.append(ff[j][1])
+    for j in range(len(fitt)):
+        fit.append(fitt[j][1])
 
-    for j in range(len(ff)):
-        ind.append(ff[j][2])
+    for j in range(len(fitt)):
+        ind.append(fitt[j][2])
 
     probability = []
 
@@ -58,9 +63,52 @@ def select_roulette(ff):
     return selected  # returns indices of selected individuals
 
 
+def select_rest_rep(fitt):
+    fit, ind = [], []
+
+    for j in range(len(fitt)):
+        fit.append(fitt[j][1])
+
+    for j in range(len(fitt)):
+        ind.append(fitt[j][2])
+
+    probability = []
+
+    for j in range(len(fit)):
+        probability.append(fit[j] / sum(fit))
+
+    selected, rests = [], []
+    for i in range(len(fit)):
+        n = math.floor(len(fit) * probability[i])
+        l = [ind[i]] * n
+        selected.extend(l)
+        t = (len(fit) * probability[i] - n, i)
+        rests.append(t)
+
+    empty = len(fit) - len(selected)
+
+    fit, ind = [], []
+
+    for j in range(len(rests)):
+        fit.append(rests[j][0])
+
+    for j in range(len(rests)):
+        ind.append(rests[j][1])
+
+    probability = []
+
+    for j in range(len(fit)):
+        probability.append(fit[j] / sum(fit))
+
+    l = random.choices(ind, probability, k=empty)
+
+    selected.extend(l)
+
+    return selected
+
+
 def mate(population, selected, crossover_prob):
     # global crossover_count
-
     i = len(population) - 1
 
     new_x = []
@@ -96,8 +144,8 @@ def save_elite(population, new_population, data, limit):
     ff_now = ff(data, population, limit)
     ff_new = ff(data, new_population, limit)
 
-    worst = min(ff_new, key=lambda tup: tup[1])
-    best = max(ff_now, key=lambda tup: tup[1])
+    worst = min(ff_new, key=lambda x: x[1])
+    best = max(ff_now, key=lambda x: x[1])
 
     new_population[worst[2]] = population[best[2]]
 
@@ -128,7 +176,7 @@ def ff_short(data, population):
             total_weight += population[i][j] * data[0][j]
             total_benefit += population[i][j] * data[1][j]
 
-        fitness.append([total_weight, total_benefit])
+        fitness.append([total_weight, total_benefit, i])
     return fitness
 
 
@@ -149,4 +197,4 @@ def test(data, elements, limit):
 
     ff.sort(key=lambda x: x[1], reverse=True)
 
-    return ff[0][1]
+    return below_limit[ff[0][2]]

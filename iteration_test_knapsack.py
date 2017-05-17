@@ -3,7 +3,7 @@
 
 import random
 import knapsack_genetic as gen
-from matplotlib import pyplot
+import numpy
 import math
 from tqdm import tqdm
 
@@ -14,12 +14,10 @@ weight_limit = math.ceil((0.5 * (10*elements)) - (0.125 * (10*elements)))
 mutation_prob = 0.005
 crossover_prob = 0.75
 
-
 results = []
 big_iterations = 1
-big_iterations_points = []
 
-for q in tqdm(range(1000)):
+for q in tqdm(range(10)):
 
     weights, benefits = [], []
     ff_av_points, iteration_points = [], []
@@ -34,6 +32,8 @@ for q in tqdm(range(1000)):
     data.append(weights)
     data.append(benefits)
 
+    max_possible = gen.test(data, elements, weight_limit)
+
     # data = [[weights], [benefits]]
 
     x = [[random.randint(0, 1) for i in range(elements)] for b in range(population)]
@@ -42,14 +42,13 @@ for q in tqdm(range(1000)):
     ff_init = gen.ff(data, x, weight_limit)
     ff = ff_init
 
-    while iteration_count < 100:
+    while gen.ff_av(ff) < max_possible:
         # SELECTION
         selected = gen.select_roulette(ff)
-        # TODO group selection
 
         # CROSS-OVER
         new_x = gen.mate(x, selected, crossover_prob)
-        gen.save_elite(x, new_x, data, weight_limit)
+        # gen.save_elite(x, new_x, data, weight_limit)
         x = new_x
 
         # MUTATION
@@ -62,16 +61,9 @@ for q in tqdm(range(1000)):
         ff_av = gen.ff_av(ff)
         iteration_count += 1
 
-    results.append(ff_av)
+    results.append(iteration_count)
 
     big_iterations += 1
-    big_iterations_points.append(big_iterations)
 
-print('Max value: {}'.format(max(results)))
+print('Average iteration number: {}'.format(numpy.mean(results)))
 
-pyplot.figure(1)
-pyplot.plot(big_iterations_points, results)
-pyplot.xlabel('Iterations')
-pyplot.ylabel('Achieved max fitness')
-pyplot.grid(True)
-pyplot.show()
