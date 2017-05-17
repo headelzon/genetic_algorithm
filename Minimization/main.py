@@ -21,7 +21,6 @@ for i in range(5):
 # and then converted to binary
 # and saved into one list (matrix) x[]
 # Each 4 bits represent one parameter x(i)
-
 x = []
 for w in range(population_init):
     x1 = []
@@ -37,8 +36,7 @@ for w in range(population_init):
         x1.extend(x1_list)
     x.append(x1)
 
-print(x)
-
+answer = genetic_min.bruteforce(a, c)   # solution given as a list of x's
 # # PRINT PARAMETERS X
 # i, x = 0, []
 # while i < 13:
@@ -51,10 +49,10 @@ print(x)
 
 ff_init = genetic_min.ff(a, c, x)
 ff_av_init = genetic_min.ff_av(ff_init)
-print(ff_init)
-print(ff_av_init)
 
 selected = genetic_min.select(ff_init)
-print(selected)
 
+x = genetic_min.mate(x, selected, crossover_prob)
 
+ff = genetic_min.ff(a, c, x)
+ff_av = genetic_min.ff_av(ff)
