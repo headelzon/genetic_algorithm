@@ -184,8 +184,6 @@ def select_rank(ff):
 
 def mate(population, selected, crossover_prob):
 
-    global crossover_count
-
     i = len(population) - 1
 
     new_x = []
@@ -211,7 +209,6 @@ def mate(population, selected, crossover_prob):
             new_x.append(cross_part_1)
             new_x.append(cross_part_2)
 
-            crossover_count += 1
             i -= 2
 
     return new_x
@@ -236,9 +233,9 @@ def mutate(population, mutation_prob):
         return False
 
 
-def save_elite(population, new_population):
-    ff_now = ff(population)
-    ff_new = ff(new_population)
+def save_elite(population, new_population, weights, capacities):
+    ff_now = ff(population, weights, capacities)
+    ff_new = ff(new_population, weights, capacities)
 
     worst = min(ff_new, key=lambda tup: tup[0])
     best = max(ff_now, key=lambda tup: tup[0])
