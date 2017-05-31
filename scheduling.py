@@ -3,6 +3,10 @@ import scheduling_module
 from matplotlib import pyplot
 
 
+# TODO Apply conditions checking as a part of fitness function
+# check_conditions function changed the genome each iteration
+# and the GA was ineffective
+
 periods = 4
 units = 7
 capacity = [20, 15, 35, 40, 15, 15, 10]
@@ -28,8 +32,6 @@ ff_av_init = scheduling_module.ff_av(ff_init)
 
 print('Initial fitness average: {}'.format(round(ff_av_init, 2)))
 
-# TODO selection, crossover, main loop
-
 ff = ff_init
 ff_av = ff_av_init
 mutation_count = 0
@@ -37,16 +39,19 @@ iterations = 0
 ff_av_points, iteration_points = [], []
 
 # main loop begin
+print('Running until average fitness == 1 or iterations are over 1000.\n')
 while ff_av < 1:
     selected = scheduling_module.select_rank(ff)                    # selection
     new_x = scheduling_module.mate(x, selected, crossover_prob)     # cross-over
 
-    scheduling_module.save_elite(x, new_x, capacity, max_cap)                          # save elite
+    scheduling_module.save_elite(x, new_x, capacity, max_cap)       # save elite
     x = new_x
     mutated = scheduling_module.mutate(x, mutation_prob)            # mutation
 
     if mutated:
         mutation_count += 1
+
+    x = scheduling_module.check_conditions(x)                       # checking conditions
 
     ff = scheduling_module.ff(x, capacity, max_cap)                 # stats
     ff_av = scheduling_module.ff_av(ff)
@@ -57,7 +62,7 @@ while ff_av < 1:
     if iterations % 100 == 0:
         print('Iterations: {}\tff_av = {}'.format(iterations, ff_av))
 
-    if iterations == 2000:
+    if iterations == 1000:
         break
 
 # main loop end
@@ -67,6 +72,13 @@ print('Iterations: {}'.format(iterations))
 print('Initial average: {};\tFinal average: {}'.format(round(ff_av_init, 2), ff_av))
 print('No of mutations: {}'.format(mutation_count))
 
+temp = []
+for i in range(4):
+    temp.append(x[0][i * 7:(i * 7) + 7])
+print()
+for i in range(4):
+    print(temp[i])
+
 # PLOTS
 pyplot.figure(1)
 pyplot.plot(iteration_points, ff_av_points)
@@ -75,4 +87,8 @@ pyplot.ylabel('Average fitness')
 pyplot.grid(True)
 pyplot.show()
 
-# record high: 0.7541666666666664
+# record high: 0.7666666666666664
+# [1, 1, 0, 0, 1, 1, 1]
+# [1, 1, 0, 0, 1, 1, 1]
+# [0, 1, 0, 0, 1, 1, 1]
+# [1, 1, 0, 0, 1, 1, 1]
