@@ -1,36 +1,55 @@
 import itertools
-import random
 
 
-o = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-possible = list(itertools.product(o, repeat=4))
+def bruteforce(a, c):
+    o = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    possible = list(itertools.product(o, repeat=4))
 
-a = [[2.61, 7.1, 5.0, 7.01], [3.13, 3.49, 4.7, 5.24], [1.27, 2.31, 3.75, 7.23], [5.48, 1.29, 5.91, 6.21], [6.34, 2.8, 3.44, 1.66]]
-c = [0.42, 0.42, 0.59, 0.64, 0.19]
+    func, fitness = 0, []
 
-func, fitness = 0, []
+    for w in range(len(possible)):
+        x = possible[w]
+        denominator = []
+        for i in range(5):
+            temp = []
+            for j in range(4):
+                exp = pow((x[j] - a[i][j]), 2) + c[i]
+                temp.append(exp)
+            b = round(sum(temp), 4)
+            denominator.append(b)
 
-for w in range(len(possible)):
-    x = possible[w]
-    denominator = []
-    for i in range(5):
-        temp = []
-        for j in range(4):
-            exp = pow((x[j] - a[i][j]), 2) + c[i]
-            temp.append(exp)
-        b = round(sum(temp), 4)
-        denominator.append(b)
+        fraction = []
+        for i in range(5):
+            fraction.append(1 / denominator[i])
 
-    fraction = []
-    for i in range(5):
-        fraction.append(1 / denominator[i])
+        func = sum(fraction)
+        t = (func, w)
+        fitness.append(t)
 
-    func = sum(fraction)
-    t = (func, w)
-    fitness.append(t)
+    best = max(fitness, key=lambda tup: tup[0])
+    worst = min(fitness, key=lambda tup: tup[0])
+    t = (list(possible[best[1]]), best[0], worst[0])
+    return t
 
-print(len(fitness))
-best = max(fitness, key=lambda tup: tup[0])
-worst = min(fitness, key=lambda tup: tup[0])
-print("{}, {}".format(best[0], list(possible[best[1]])))
-print("{}, {}".format(worst[0], possible[worst[1]]))
+
+chromosome = [4, 4, 4, 4]
+a = [[7, 7, 1, 9], [8, 2, 7, 5], [9, 7, 1, 8], [9, 1, 8, 8], [4, 3, 5, 7]]
+c = [0.3, 0.2, 0.2, 0.6, 0.2]
+
+denominator = []
+for i in range(5):
+    temp = []
+    for j in range(4):
+        exp = pow((chromosome[j] - a[i][j]), 2) + c[i]
+        temp.append(exp)
+    b = round(sum(temp), 4)
+    denominator.append(b)
+
+fraction = []
+for i in range(5):
+    fraction.append(1 / denominator[i])
+
+func = sum(fraction)
+print(func)
+
+print(bruteforce(a, c))
