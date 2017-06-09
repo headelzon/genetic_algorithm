@@ -90,29 +90,49 @@ def continuity(chromosome):
     return x_new
 
 
+def colben(column, first):
+    e = [[1, 1, 0, 0], [1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1, 0]]
+    if first:
+        if column in e:
+            return 1
+        else:
+            return 0
+    else:
+        condition = (2, 3)
+        if condition[0] <= sum(column) <= condition[1]:
+            if sum(column) == condition[0]:
+                return 0.5
+            else:
+                return 1
+        else:
+            return 0
+
+
+def tempben(temp, capacities, limit):
+    total = 0
+    for i in range(len(temp)):
+        total += temp[i] * capacities[i]
+
+    if total <= limit:
+        return 1
+    else:
+        return 0
+
+
 def ff(pop, weights, capacities):
+    # pop - population
+    # weights - power used by each machine
+    # capacities - power limits
     fitness = []
 
     for q in range(len(pop)):
 
+        # temp - all machines, one period
+        # col - all periods, one machine
+
         temp = []
         for i in range(4):
             temp.append(pop[q][i * 7:(i * 7) + 7])
-
-        temp_cost = 0
-        for i in range(4):
-            total_power = 0
-            for j in range(7):
-                total_power += temp[i][j] * weights[j]
-            temp_cost += capacities[i] - total_power
-
-        max_power = sum(weights)
-        max_temp_cost = []
-        for i in range(4):
-            max_temp_cost.append(capacities[i] - max_power)
-
-        max_cost = sum(max_temp_cost)
-        min_cost = sum(capacities)
 
         col = [[], [], [], [], [], [], []]
 
@@ -120,20 +140,25 @@ def ff(pop, weights, capacities):
             for j in range(7):
                 col[j].append(temp[i][j])
 
-        col_benefit, benefit = 0, 0
-        for i in range(4):
-            col_benefit += sum(temp[i])
-        benefit = col_benefit / 7
+        fit = 0
 
-        max_benefit = ((5 * 3) + 4) / 7
-        # max benefit when all machines are turned on 3 times per cycle (excluding 1 and 2, which are always turned
-        # on only 2 times)
-        # min benefit = 2, when all machines run only 2 times per cycle
+        for i in range(len(col)):      # i = 7
+            if i == 0 or i == 1:
+                first = True
+            else:
+                first = False
 
-        benefit = numpy.interp(benefit, [2, max_benefit], [0, 1])
-        cost = numpy.interp(temp_cost, [max_cost, min_cost], [0, 1])
+            col_benefit = colben(col[i], first)
 
-        fit = numpy.interp(benefit + cost, [0, 2], [0, 1])
+            for j in range(len(temp)):   # j = 4
+                temp_benefit = tempben(temp[j], weights, capacities[j])
+
+                fit += col_benefit * temp_benefit
+
+        for i in range(len(col)):
+            check = sum(col[i])     # if any column is all zeros
+            if check == 0:
+                fit = fit * 0.5     # split fitness by half
 
         fitness.append((fit, q))
 
@@ -183,7 +208,6 @@ def select_rank(ff):
 
 
 def mate(population, selected, crossover_prob):
-
     i = len(population) - 1
 
     new_x = []
@@ -192,7 +216,7 @@ def mate(population, selected, crossover_prob):
 
         if random.uniform(0, 1) > crossover_prob:
             new_x.append(population[selected[i]])
-            new_x.append(population[selected[i-1]])
+            new_x.append(population[selected[i - 1]])
             i -= 2
             continue
         else:
@@ -215,7 +239,6 @@ def mate(population, selected, crossover_prob):
 
 
 def mutate(population, mutation_prob):
-
     mut = random.uniform(0, 1)
 
     if mut <= mutation_prob:
