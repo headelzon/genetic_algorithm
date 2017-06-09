@@ -3,10 +3,6 @@ import scheduling_module
 from matplotlib import pyplot
 
 
-# TODO Apply conditions checking as a part of fitness function
-# check_conditions function changed the genome each iteration
-# and the GA was ineffective
-
 periods = 4
 units = 7
 capacity = [20, 15, 35, 40, 15, 15, 10]
@@ -24,7 +20,6 @@ no_elem = periods * units
 for qr in range(1):
     print('------------- {} -------------'.format(qr).center(80))
     x = [[random.randint(0, 1) for i in range(no_elem)] for b in range(population)]
-    # x = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
     print('Population initialized: {} elements.\n'.format(population))
 
     x = scheduling_module.check_conditions(x)
@@ -41,7 +36,7 @@ for qr in range(1):
     ff_av_points, iteration_points = [], []
 
     # main loop begin
-    # print('Running until average fitness == 1 or iterations are over 1000.\n')
+    # print('Running until average fitness == 20 or iterations are over 1000.\n')
     while ff_av < 20:
         selected = scheduling_module.select_rank(ff)                    # selection
         new_x = scheduling_module.mate(x, selected, crossover_prob)     # cross-over
@@ -87,4 +82,4 @@ pyplot.ylabel('Average fitness')
 pyplot.grid(True)
 pyplot.show()
 
-# RECORD HIGH: 19.5
+# RECORD HIGH: 20.0
