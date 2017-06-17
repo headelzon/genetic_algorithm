@@ -34,3 +34,7 @@ After the whole sequence the population is evaluated again by the cost function.
 <li>Scheduling problem</li>
 <li>Multivariable function minimization</li>
 </ul>
+
+## Code
+
+The algorithms are written in Python 3. Modules used: numpy, matplotlib, math, random.
