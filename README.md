@@ -1,4 +1,3 @@
-# genetic_algorithm
 ## Overview
 
 In most cases the algorithm is written along the timeline:
